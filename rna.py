@@ -34,12 +34,6 @@ probability_model = tf.keras.Sequential([model,
 
 predictions = probability_model.predict(test_images)
 
-predictions[0]
-
-np.argmax(predictions[0])
-
-test_labels[0]
-
 def plot_image(i, predictions_array, true_label, img):
   true_label, img = true_label[i], img[i]
   plt.grid(False)
