@@ -1,6 +1,4 @@
 import tensorflow as tf
-
-# Helper libraries
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -12,7 +10,6 @@ class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
                'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
 
 train_images = train_images / 255.0
-
 test_images = test_images / 255.0
 
 model = tf.keras.Sequential([
@@ -21,7 +18,8 @@ model = tf.keras.Sequential([
     tf.keras.layers.Dense(10)
 ])
 
-model.compile(optimizer='adam',
+optimizer = tf.keras.optimizers.Adam(learning_rate=0.0001)  # ajuste aqui
+model.compile(optimizer=optimizer,
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=['accuracy'])
 
@@ -73,17 +71,20 @@ def plot_value_array(i, predictions_array, true_label):
   thisplot[predicted_label].set_color('red')
   thisplot[true_label].set_color('blue')
 
-# Plot the first X test images, their predicted labels, and the true labels.
-# Color correct predictions in blue and incorrect predictions in red.
+
 num_rows = 5
-num_cols = 3
-num_images = num_rows*num_cols
+num_cols = 5
+num_images = num_rows * num_cols
+
+# Seleciona índices aleatórios sem repetição
+random_indices = np.random.choice(len(test_images), size=num_images, replace=False)
+
 plt.figure(figsize=(2*2*num_cols, 2*num_rows))
-for i in range(num_images):
-  plt.subplot(num_rows, 2*num_cols, 2*i+1)
-  plot_image(i, predictions[i], test_labels, test_images)
-  plt.subplot(num_rows, 2*num_cols, 2*i+2)
-  plot_value_array(i, predictions[i], test_labels)
+for idx, i in enumerate(random_indices):
+    plt.subplot(num_rows, 2*num_cols, 2*idx+1)
+    plot_image(i, predictions[i], test_labels, test_images)
+    plt.subplot(num_rows, 2*num_cols, 2*idx+2)
+    plot_value_array(i, predictions[i], test_labels)
 plt.tight_layout()
-plt.show()
+plt.savefig("dados.png")
 
